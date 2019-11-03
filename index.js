@@ -356,44 +356,44 @@ app.post('/createThread', (req, res)=>{
     title       : req.body.title,
     book : req.body.book,
     viewStatus: 'private',
-    created_at  : Date.now() 
-  }).save(function(err, thread, count){  
+    created_at  : Date.now()
+  }).save(function(err, thread, count){
     console.log(thread)
-    res.redirect('/discussions');  
+    res.redirect('/discussions');
   });
 });
 
 app.get('/createThread', (req, res)=>{
   new Thread({
     title       : req.query.title,
-    created_at  : Date.now() 
-  }).save(function(err, thread, count){  
-    res.redirect('/discussions');  
+    created_at  : Date.now()
+  }).save(function(err, thread, count){
+    res.redirect('/discussions');
   });
 });
 
 
 
 app.post('/createPost', (req, res)=>{
-  Thread.findById(req.body.thread_id, function(err, thread) {  
-  
+  Thread.findById(req.body.thread_id, function(err, thread) {
+
   new Post({
     content   : req.body.content,
     created_at  : Date.now(),
     thread      : thread,
-   }).save(function(err, post, count){  
-    thread.posts.push(post)  
+   }).save(function(err, post, count){
+    thread.posts.push(post)
      //var pp=[]
      // thread.posts.forEach(function(v){pp.push(Post.findById(v))} )
    //  pp.forEach( (p)=>console.log(p.content) )
-       
+
      thread.users.forEach((user)=>{
       user.notifications.push("New post added to '"+ thread.title+"'")
-      user.save 
+      user.save
      });
      console.log(req.body.content)
-    thread.save(function(err, thread, count){ 
-      res.redirect('/discussions/'+req.body.thread_id);  
+    thread.save(function(err, thread, count){
+      res.redirect('/discussions/'+req.body.thread_id);
     });
   });
   });
@@ -409,14 +409,14 @@ app.get('/createUser', (req, res)=>{
   res.redirect('/');
 });
 app.get('/books', (req, res)=>{
-  Book.find(function(err, books, count) {   
+  Book.find(function(err, books, count) {
     res.render('books', {
       books: books
     });
   });// .sort({created_on: -1}) // Sort by created_on desc
 });
 app.get('/posts', (req, res)=>{
-  Post.find(function(err, posts, count) {   
+  Post.find(function(err, posts, count) {
     res.render('posts', {
       posts: posts
     });
@@ -428,11 +428,11 @@ app.get('/discussions/:id', (req, res)=>{
       Post.find({'thread': [req.params.id]}).exec( (err,pp)=>
       res.render('thread', {
         thread: thread,
-        posts: pp 
-     
+        posts: pp
+
       })
       )
-  
+
     });
 });
 app.get('/users/:id', (req, res)=>{
@@ -442,13 +442,13 @@ app.get('/users/:id', (req, res)=>{
      }
       res.render('user', {
         user: user
-     
+
       })
-  
+
     });
 });
 app.get('/discussions', (req, res)=>{
-  Thread.find(function(err, threads, count) {   
+  Thread.find(function(err, threads, count) {
     res.render('threads', {
       threads: threads
     });
@@ -476,7 +476,7 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
       } )
    });
 
-    res.end()   
+    res.end()
   });
 
      res.end

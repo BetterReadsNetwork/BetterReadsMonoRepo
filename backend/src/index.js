@@ -53,6 +53,11 @@ app.use(
 
 
 /***************************************/
+// app.get('/', (req, res)=>{
+//   res.sendFile('index.html', {root: __dirname });
+// });
+
+
 
 app.use("/api/block_user/:id", (req, res) => {
   var user = req.params.id;
@@ -380,11 +385,14 @@ app.use("/chats/:id", (req, res) => {
 
 /*************************************************/
 app.post('/createThread', (req, res)=>{
+  console.log(res)
   new Thread({
     title       : req.body.title,
     book : req.body.book,
+    viewStatus: 'private',
     created_at  : Date.now()
   }).save(function(err, thread, count){
+    console.log(thread)
     res.redirect('/discussions');
   });
 });
@@ -426,6 +434,20 @@ app.post('/createPost', (req, res)=>{
 });
 app.get('/createBook', (req, res)=>{
   new Book({title: req.query.title}).save( (a,b,c)=>{});
+  res.redirect('/books');
+});
+
+app.get('/createUser', (req, res)=>{
+  new User({name: 'Roonil Wazlib', notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
+
+  res.redirect('/');
+});
+app.get('/books', (req, res)=>{
+  Book.find(function(err, books, count) {
+    res.render('books', {
+      books: books
+    });
+  });// .sort({created_on: -1}) // Sort by created_on desc
 });
 app.get('/posts', (req, res)=>{
   Post.find(function(err, posts, count) {
@@ -447,6 +469,18 @@ app.get('/discussions/:id', (req, res)=>{
 
     });
 });
+app.get('/users/:id', (req, res)=>{
+    User.findById(req.params.id, function(err, user) {
+     if(user == null){
+      res.redirect("/");
+     }
+      res.render('user', {
+        user: user
+
+      })
+
+    });
+});
 app.get('/discussions', (req, res)=>{
   Thread.find(function(err, threads, count) {
     res.render('threads', {
@@ -455,9 +489,6 @@ app.get('/discussions', (req, res)=>{
   });// .sort({created_on: -1}) // Sort by created_on desc
 });
 
-app.get('/', (req, res)=>{
-  res.sendFile('index.html', {root: __dirname });
-});
 
 app.post('/browse', (req, res)=>{
   res.type('html').status(200);
@@ -491,17 +522,17 @@ app.post( '/browseDiscussions',(req, res) =>{
     });
   });
 })
-app.use("/", (req, res) => {
-  res.redirect("/chats/7");
-});
-
-// app.listen(3000, () => {
-//   console.log("Listening on port 3000");
-// });
 
 
+
+
+
+
+
+//*******************************************************.
 //*** TODO REFACTOR CODE BELOW THEY ARE ADOPTED FROM
 // https://auth0.com/blog/react-tutorial-building-and-securing-your-first-app/
+// ASK ALEX ABOUT THE CODE DON'T MODIFY BELOW;
 
 // retrieve all questions
 app.get('/', (req, res) => {
