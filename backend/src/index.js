@@ -13,9 +13,9 @@ const url = require("url");
 const https = require("https");
 const xml2js = require('xml2js');
 // import BetterReads Libaries:
-var Message = require("./schema/Message.js");
-var Chat = require("./schema/Chat.js");
-var Block = require("./schema/Block.js");
+var Message = require("./models/Message.js");
+var Chat = require("./models/Chat.js");
+var Block = require("./models/Block.js");
 var Post = require('./models/post.js')
 var Thread = require('./models/thread.js')
 var Nofitication =require('./models/notification.js')
