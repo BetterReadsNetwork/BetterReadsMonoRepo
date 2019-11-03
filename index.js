@@ -354,6 +354,7 @@ app.post('/createThread', (req, res)=>{
   new Thread({
     title       : req.body.title,
     book : req.body.book,
+    viewStatus: 'private',
     created_at  : Date.now() 
   }).save(function(err, thread, count){  
     res.redirect('/discussions');  
@@ -435,7 +436,7 @@ app.get('/discussions/:id', (req, res)=>{
 app.get('/users/:id', (req, res)=>{
     User.findById(req.params.id, function(err, user) {
      if(user == null){
-      res.redirect("/chats/7");
+      res.redirect("/");
      }
       res.render('user', {
         user: user
