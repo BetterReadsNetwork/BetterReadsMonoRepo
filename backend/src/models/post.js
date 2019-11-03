@@ -1,3 +1,5 @@
+// TODO: Who is the responsible engineer for this file?
+
 var mongoose = require('mongoose');
 var mongoDb = 'mongodb://127.0.0.1/myDb'
 mongoose.connect(mongoDb, {useNewUrlParser: true} );

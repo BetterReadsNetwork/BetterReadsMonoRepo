@@ -1,3 +1,5 @@
+// TODO: Who is the responsible engineer for this file?
+
 var mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost:27017/db");

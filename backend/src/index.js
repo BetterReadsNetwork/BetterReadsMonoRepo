@@ -1,3 +1,6 @@
+// TODO: Who is the responsible engineer for this file? Add name to each
+// method / route so we know who to chase down for bugs
+
 //import dependencies (from Auth0 tutorial)
 const express = require('express');
 const bodyParser = require('body-parser');
