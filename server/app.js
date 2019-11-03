@@ -3,16 +3,23 @@ var https = require("https");
 var Post = require('./models/post.js')
 var Thread = require('./models/thread.js')
 var Nofitication =require('./models/notification.js')
+var Profile = require('./models/profile.js')
 var Topic = require('./models/topic.js')
 var User = require('./models/user.js')
 var Book = require('./models/book.js')
 const app = express()
-const port = 4444
+const port = 3002
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser({attrkey: "ATTR"});
 var bodyParser  = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'localhost:3000');
+  console.log(res);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 app.post('/createThread', (req, res)=>{
   new Thread({
@@ -22,17 +29,6 @@ app.post('/createThread', (req, res)=>{
     res.redirect('/discussions');  
   });
 });
-
-app.get('/createThread', (req, res)=>{
-  new Thread({
-    title       : req.query.title,
-    created_at  : Date.now() 
-  }).save(function(err, thread, count){  
-    res.redirect('/discussions');  
-  });
-});
-
-
 
 app.post('/createPost', (req, res)=>{
   Thread.findById(req.body.thread_id, function(err, thread) {  
@@ -116,11 +112,36 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
   console.log("Error: " + err.message);
   });
 });
-app.post( '/browseDiscussions',(req, res) =>{
+app.get( '/browseDiscussions',(req, res) =>{
+  console.log(req.body);
   Thread.find({'user': req.body.query}).exec((err, threads)=>{
     res.render('browseD', {
       threads: threads
     });
   });
 })
+app.listen(port, () =>console.log(`App listening on port ${port}`))
+
+app.get( '/getProfile',(req, res) =>{
+  console.log(req.body);
+  Profile.find({'user': req.body.query}).exec((err, profile)=>{
+    res.send(profile);
+  });
+})
+
+app.post( '/setProfile',(req, res) =>{
+  console.log(req.body);
+  new Profile({
+    username: req.body.username,
+    favoriteBook: req.body.favoriteBook,
+    favoriteGenre: req.body.favoriteGenre,
+    ageRange: req.body.ageRange,
+    country: req.body.country,
+    language: req.body.language,
+    gender: req.body.language
+    }).save(function(err, Profile, count) { 
+      res.send(" Profile")
+     console.log(err);
+    });
+  });
 app.listen(port, () =>console.log(`App listening on port ${port}`))

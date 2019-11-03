@@ -1,0 +1,16 @@
+<div>
+  <% threads.forEach(function(thread) { %>
+    <div>
+      <p>
+        <a href="/discussions/<%= thread.id %>">
+          <%= thread.title %>
+        </a>
+      </p>
+    </div>
+  <% }); %>
+  <form action="/createThread" method="post">
+  <input type="text" name="title" >
+  <input type="text" name="book" >
+  <input type="submit" value="Create Thread">
+  </form>
+</div>

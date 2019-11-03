@@ -627,6 +627,37 @@ app.post('/answer/:id', checkJwt, (req, res) => {
   res.status(200).send();
 });
 
+
+
+//// ********************************************
+// STEFFEN's ROUTES FOR USERS;
+// OWNER: STEFFEN:
+
+app.get( '/getProfile', (req, res) =>{
+  console.log(req.body);
+  Profile.find({'user': req.body.query}).exec((err, profile)=>{
+    res.send(profile);
+  });
+})
+
+app.post( '/setProfile', (req, res) =>{
+  console.log(req.body);
+  new Profile({
+    username: req.body.username,
+    favoriteBook: req.body.favoriteBook,
+    favoriteGenre: req.body.favoriteGenre,
+    ageRange: req.body.ageRange,
+    country: req.body.country,
+    language: req.body.language,
+    gender: req.body.language
+    }).save(function(err, Profile, count) {
+      res.send(" Profile")
+     console.log(err);
+    });
+  });
+
+
+
 // start the server
 app.listen(8081, () => {
   console.log('listening on port 8081');
