@@ -1,14 +1,5 @@
 const express = require('express')
 var https = require("https");
-//var mongoose = require('mongoose');
-//var mongoDb = 'mongodb://127.0.0.1/myDb'
-//mongoose.connect(mongoDb, {useNewUrlParser: true} );
-//var db = mongoose.connection;
-//var Schema = mongoose.Schema;
-//mongoose population feature
-
-
-
 var Post = require('./models/post.js')
 var Thread = require('./models/thread.js')
 var Nofitication =require('./models/notification.js')
@@ -29,8 +20,6 @@ app.post('/createThread', (req, res)=>{
   });
 });
 app.post('/createPost', (req, res)=>{
-  // Post content, Thread id
-  
   Thread.findById(req.body.thread_id, function(err, thread) {  
   
   new Post({
@@ -51,11 +40,6 @@ app.post('/createPost', (req, res)=>{
 });
 
 app.get('/posts', (req, res)=>{
-/*  var posts = Post.find().sort({created_on: -1}) // Sort by created_on desc
-  res.render('posts', {
-    posts: posts
-  });
-*/
   Post.find(function(err, posts, count) {   
     res.render('posts', {
       posts: posts
@@ -65,30 +49,17 @@ app.get('/posts', (req, res)=>{
 
 app.get('/discussions/:id', (req, res)=>{
     Thread.findById(req.params.id, function(err, thread) {
-      var pp=[]
-      thread.posts.forEach(function(v){pp.push(Post.findById(v))} )
-      pp.push(Post.findOne(thread.posts[0]))
       Post.find({'thread': [req.params.id]}).exec( (err,pp)=>
-      //console.log(pp)
       res.render('thread', {
         thread: thread,
         posts: pp 
-     //   posts:  pp
+     
       })
       )
-     // res.render('thread', {
-      //  thread: thread,
-      //  posts: Post.find({'thread._id': req.params.id})
-     //   posts:  pp
-     // });
+  
     });
 });
 app.get('/discussions', (req, res)=>{
-/*  var posts = Post.find().sort({created_on: -1}) // Sort by created_on desc
-  res.render('posts', {
-    posts: posts
-  });
-*/
   Thread.find(function(err, threads, count) {   
     res.render('threads', {
       threads: threads
@@ -112,20 +83,10 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
 
   resp.on('end', () => {
     parser.parseString(data, (error, result)=>{
-      //Book.find
-      //Thread.find({'book', ''})
       res.render('browse',{
         books: result['GoodreadsResponse']['search'],
       } )
-      /*
-    	result['GoodreadsResponse']['search'].forEach((book) =>{
-		book.results[0]['work'].forEach((work)=>{
-			 console.log(work.best_book[0].title[0])
-			 res.write("<img src='"+ work.best_book[0].image_url[0]+"'/>");
-			 res.write("<p>"+ work.best_book[0].title[0]+"</p>")
-		});
-	});
-   */ });
+   });
 
     res.end()	  
   });
