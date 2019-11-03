@@ -43,9 +43,14 @@ app.post('/createPost', (req, res)=>{
     thread      : thread,
    }).save(function(err, post, count){  
     thread.posts.push(post)  
-     var pp=[]
-      thread.posts.forEach(function(v){pp.push(Post.findById(v))} )
-     pp.forEach( (p)=>console.log(p.content) )
+     //var pp=[]
+     // thread.posts.forEach(function(v){pp.push(Post.findById(v))} )
+   //  pp.forEach( (p)=>console.log(p.content) )
+       
+     thread.users.forEach((user)=>{
+      user.notifications.push("New post added to '"+ thread.title+"'")
+      user.save 
+     });
      console.log(req.body.content)
     thread.save(function(err, thread, count){ 
       res.redirect('/discussions/'+req.body.thread_id);  
@@ -111,5 +116,11 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
   console.log("Error: " + err.message);
   });
 });
-
+app.post( '/browseDiscussions',(req, res) =>{
+  Thread.find({'user': req.body.query}).exec((err, threads)=>{
+    res.render('browseD', {
+      threads: threads
+    });
+  });
+})
 app.listen(port, () =>console.log(`App listening on port ${port}`))

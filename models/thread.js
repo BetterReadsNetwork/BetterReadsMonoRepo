@@ -9,6 +9,8 @@ var ThreadSchema = new Schema({
   created_on: Date,
   active: Boolean,
   book: String,
+  owner: {type: Schema.Types.ObjectId, ref: 'User'},
+  users: [{type: Schema.Types.ObjectId, ref: 'User'}],
   viewStatus: String,
   posts: [{type: Schema.Types.ObjectId, ref: 'Post'}]
 });

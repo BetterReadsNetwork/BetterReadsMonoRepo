@@ -5,7 +5,8 @@ var db = mongoose.connection;
 var Schema = mongoose.Schema;
 
 var NotifSchema = new Schema({
-  content: String
-  //user: [{type: Schema.Types.ObjectId, ref: 'User'}]
+  content: String,
+  thread: {type: Schema.Types.ObjectId, ref: 'Thread'},
+  user: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 module.exports = mongoose.model('Nofitication', NotifSchema)
