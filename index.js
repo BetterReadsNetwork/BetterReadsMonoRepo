@@ -397,6 +397,15 @@ app.post('/createPost', (req, res)=>{
 });
 app.get('/createBook', (req, res)=>{
   new Book({title: req.query.title}).save( (a,b,c)=>{});
+  res.redirect('/books');
+});
+
+app.get('/books', (req, res)=>{
+  Book.find(function(err, books, count) {   
+    res.render('books', {
+      books: books
+    });
+  });// .sort({created_on: -1}) // Sort by created_on desc
 });
 app.get('/posts', (req, res)=>{
   Post.find(function(err, posts, count) {   
