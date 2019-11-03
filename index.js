@@ -489,7 +489,7 @@ app.post( '/browseDiscussions',(req, res) =>{
   });
 })
 app.use("/", (req, res) => {
-  res.redirect("/chats/7");
+ // res.redirect("/chats/7");
 });
 
 app.listen(3000, () => {
