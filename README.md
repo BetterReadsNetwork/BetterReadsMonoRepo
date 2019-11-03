@@ -48,7 +48,7 @@ Running the backend would require the reverse;
 
 ## Notes:
 - the `client` and `server` folders are from Steffen's first iteration; they
-are iteratively being integrated into the `frontend` and `backend` folders respectively, and will be deleted eventually
+are iteratively being integrated into the `frontend` and `backend` folders respectively, and will be deleted eventually UPDATE: they have been merged with `frontend` and `backend`!!
 
 # MESSAGING TO DO
 - Prevent adding a chat when user is blocked.
