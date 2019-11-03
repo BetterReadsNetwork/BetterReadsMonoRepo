@@ -400,6 +400,11 @@ app.get('/createBook', (req, res)=>{
   res.redirect('/books');
 });
 
+app.get('/createUser', (req, res)=>{
+  new User({name: 'Roonil Wazlib', notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
+
+  res.redirect('/');
+});
 app.get('/books', (req, res)=>{
   Book.find(function(err, books, count) {   
     res.render('books', {
@@ -424,6 +429,18 @@ app.get('/discussions/:id', (req, res)=>{
      
       })
       )
+  
+    });
+});
+app.get('/users/:id', (req, res)=>{
+    User.findById(req.params.id, function(err, user) {
+     if(user == null){
+      res.redirect("/chats/7");
+     }
+      res.render('user', {
+        user: user
+     
+      })
   
     });
 });
