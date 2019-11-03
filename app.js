@@ -3,6 +3,9 @@ var https = require("https");
 var Post = require('./models/post.js')
 var Thread = require('./models/thread.js')
 var Nofitication =require('./models/notification.js')
+var Topic = require('./models/topic.js')
+var User = require('./models/user.js')
+var Book = require('./models/book.js')
 const app = express()
 const port = 4444
 const xml2js = require('xml2js');
@@ -19,6 +22,18 @@ app.post('/createThread', (req, res)=>{
     res.redirect('/discussions');  
   });
 });
+
+app.get('/createThread', (req, res)=>{
+  new Thread({
+    title       : req.query.title,
+    created_at  : Date.now() 
+  }).save(function(err, thread, count){  
+    res.redirect('/discussions');  
+  });
+});
+
+
+
 app.post('/createPost', (req, res)=>{
   Thread.findById(req.body.thread_id, function(err, thread) {  
   

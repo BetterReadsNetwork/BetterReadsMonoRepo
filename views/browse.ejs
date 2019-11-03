@@ -4,7 +4,13 @@
     <% book.results[0]['work'].forEach((work) => { %>
     <div>
       <img src='<%= work.best_book[0].image_url[0] %>'/>
-      <p><%=work.best_book[0].title[0] %></p>
+      <p>
+        <%=work.best_book[0].title[0] %>
+        <span style="float:right">
+          <a href="/createThread?title=<%= work.best_book[0].title[0] %>">Start Discussion</a>
+        </span>
+      </p>
+        
     </div>
     <%  }) }); %>
   </body>
