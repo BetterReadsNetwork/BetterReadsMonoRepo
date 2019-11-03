@@ -3,7 +3,7 @@ var app = express();
 var https = require("https");
 
 app.set("view engine", "ejs");
-
+const parser = new xml2js.Parser({attrkey: "ATTR"});
 var bodyParser = require("body-parser");
 app.use(
   bodyParser.urlencoded({
