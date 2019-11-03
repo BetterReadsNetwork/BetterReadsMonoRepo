@@ -18,43 +18,43 @@ app.post('/createThread', (req, res)=>{
   new Thread({
     title       : req.body.title,
     book : req.body.book,
-    created_at  : Date.now() 
-  }).save(function(err, thread, count){  
-    res.redirect('/discussions');  
+    created_at  : Date.now()
+  }).save(function(err, thread, count){
+    res.redirect('/discussions');
   });
 });
 
 app.get('/createThread', (req, res)=>{
   new Thread({
     title       : req.query.title,
-    created_at  : Date.now() 
-  }).save(function(err, thread, count){  
-    res.redirect('/discussions');  
+    created_at  : Date.now()
+  }).save(function(err, thread, count){
+    res.redirect('/discussions');
   });
 });
 
 
 
 app.post('/createPost', (req, res)=>{
-  Thread.findById(req.body.thread_id, function(err, thread) {  
-  
+  Thread.findById(req.body.thread_id, function(err, thread) {
+
   new Post({
     content   : req.body.content,
     created_at  : Date.now(),
     thread      : thread,
-   }).save(function(err, post, count){  
-    thread.posts.push(post)  
+   }).save(function(err, post, count){
+    thread.posts.push(post)
      //var pp=[]
      // thread.posts.forEach(function(v){pp.push(Post.findById(v))} )
    //  pp.forEach( (p)=>console.log(p.content) )
-       
+
      thread.users.forEach((user)=>{
       user.notifications.push("New post added to '"+ thread.title+"'")
-      user.save 
+      user.save
      });
      console.log(req.body.content)
-    thread.save(function(err, thread, count){ 
-      res.redirect('/discussions/'+req.body.thread_id);  
+    thread.save(function(err, thread, count){
+      res.redirect('/discussions/'+req.body.thread_id);
     });
   });
   });
@@ -63,7 +63,7 @@ app.get('/createBook', (req, res)=>{
   new Book({title: req.query.title}).save( (a,b,c)=>{});
 });
 app.get('/posts', (req, res)=>{
-  Post.find(function(err, posts, count) {   
+  Post.find(function(err, posts, count) {
     res.render('posts', {
       posts: posts
     });
@@ -75,15 +75,15 @@ app.get('/discussions/:id', (req, res)=>{
       Post.find({'thread': [req.params.id]}).exec( (err,pp)=>
       res.render('thread', {
         thread: thread,
-        posts: pp 
-     
+        posts: pp
+
       })
       )
-  
+
     });
 });
 app.get('/discussions', (req, res)=>{
-  Thread.find(function(err, threads, count) {   
+  Thread.find(function(err, threads, count) {
     res.render('threads', {
       threads: threads
     });
@@ -111,7 +111,7 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
       } )
    });
 
-    res.end()	  
+    res.end()
   });
 
      res.end
