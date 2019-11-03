@@ -351,12 +351,14 @@ app.use("/chats/:id", (req, res) => {
 
 /*************************************************/
 app.post('/createThread', (req, res)=>{
+  console.log(res)
   new Thread({
     title       : req.body.title,
     book : req.body.book,
     viewStatus: 'private',
     created_at  : Date.now() 
   }).save(function(err, thread, count){  
+    console.log(thread)
     res.redirect('/discussions');  
   });
 });
