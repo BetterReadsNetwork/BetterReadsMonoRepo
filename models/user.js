@@ -8,6 +8,7 @@ var UserSchema = new Schema({
   name: String,
   created_on: Date,
   threads_following: [{type: Schema.Types.ObjectId, ref: 'Thread'}],
+  privateThreads: [{type: Schema.Types.ObjectId, ref: 'Thread'}],
   notifications: [String]
 });
 module.exports = mongoose.model('User', UserSchema);
