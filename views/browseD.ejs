@@ -1,0 +1,17 @@
+<html>
+  <body>
+    <% threads.forEach((thread) => { %>
+    <div>
+      <img src='<%= work.best_book[0].image_url[0] %>'/>
+      <p>
+       
+        <span style="float:right">
+          <a href="/discussions/<%= thread.id %>"> <%=thread.title %></a>
+          
+        </span>
+      </p>
+        
+    </div>
+    <%  }) %>
+  </body>
+</html>

@@ -1,7 +1,6 @@
 <html>
   <body>
     <% books.forEach((book) => { %>
-    <% book.results[0]['work'].forEach((work) => { %>
     <div>
       <img src='<%= work.best_book[0].image_url[0] %>'/>
       <p>
@@ -13,6 +12,6 @@
       </p>
         
     </div>
-    <%  }) }); %>
+    <%  }) %>
   </body>
 </html>

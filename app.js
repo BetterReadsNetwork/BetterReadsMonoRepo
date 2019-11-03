@@ -17,6 +17,7 @@ app.set('view engine', 'ejs');
 app.post('/createThread', (req, res)=>{
   new Thread({
     title       : req.body.title,
+    book : req.body.book,
     created_at  : Date.now() 
   }).save(function(err, thread, count){  
     res.redirect('/discussions');  
@@ -58,7 +59,9 @@ app.post('/createPost', (req, res)=>{
   });
   });
 });
-
+app.get('/createBook', (req, res)=>{
+  new Book({title: req.query.title}).save( (a,b,c)=>{});
+});
 app.get('/posts', (req, res)=>{
   Post.find(function(err, posts, count) {   
     res.render('posts', {
