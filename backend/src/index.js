@@ -1,18 +1,51 @@
-// TODO: Who is the responsible engineer for this file? Add name to each
-// method / route so we know who to chase down for bugs
+/*
+BetterReads
+(betterreads.org)
 
-//import dependencies (from Auth0 tutorial)
+Backend, Main `index.js` file
+Fall 2019
+CIS 350
+University of Pennsylvania
+PM: Irene Zhang
+
+// TODO: Add name to each method / route so we know who to chase down for bugs
+*/
+
+
+/* External Libraries *********************************************************
+
+- `body-parser:`` This is a library that you will use to convert the body of incoming
+requests into JSON objects / urlencoded objects.
+- `cors`: This is a library that you will use to configure Express to add headers
+stating that your API accepts requests coming from other origins. This is also
+known as Cross-Origin Resource Sharing (CORS).
+- `helmnet`: This is a library that helps to secure Express apps with various HTTP headers.
+- `morgan`: This is a library that adds some logging capabilities to your Express app.`
+- `url`: The URL module splits up a web address into readable parts
+- `https`: HTTPS is the HTTP protocol over TLS/SSL. In Node.js this is implemented
+as a separate module.
+- `xml2js`: Simple XML to JavaScript object converter. It supports bi-directional
+conversion. Uses sax-js and xmlbuilder-js.
+*/
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-
-// user defined
 const url = require("url");
 const https = require("https");
 const xml2js = require('xml2js');
-// import BetterReads Libaries:
+
+/* Authentication Libraries ****
+- `express-jwt`:  A middleware that validates a JSON Web Token (JWT) and set the
+req.user with its attributes.
+- `jwks-rsa`: A library to retrieve RSA public keys from a JWKS (JSON Web Key Set) endpoint.
+*/
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
+
+/* BetterReads Libraries ******************************************************
+*/
 var Message = require("./models/Message.js");
 var Chat = require("./models/Chat.js");
 var Block = require("./models/Block.js");
@@ -23,9 +56,7 @@ var Topic = require('./models/topic.js')
 var User = require('./models/user.js')
 var Book = require('./models/book.js')
 
-// Authentication Libraries
-const jwt = require('express-jwt');
-const jwksRsa = require('jwks-rsa');
+/*********************************************************************** */
 
 // define the Express app
 const app = express();
@@ -36,8 +67,13 @@ const questions = [];
 // enhance your app security with Helmet
 app.use(helmet());
 
-// use bodyParser to parse application/json content-type
-// app.use(bodyParser.json());
+// use bodyParser to parse different content types, such as
+// application/json content-type
+// Awesome article on bodyParser: https://medium.com/@adamzerner/how-bodyparser-works-247897a93b90
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// add more ues of bodyParser here
+const parser = new xml2js.Parser({attrkey: "ATTR"});
 
 // enable all CORS requests
 app.use(cors());
@@ -45,14 +81,9 @@ app.use(cors());
 // log HTTP requests
 app.use(morgan('combined'));
 
-// We defined this
+// Set backend view engine to EJS
 app.set("view engine", "ejs");
-const parser = new xml2js.Parser({attrkey: "ATTR"});
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+
 
 
 /***************************************/
@@ -532,10 +563,11 @@ app.post( '/browseDiscussions',(req, res) =>{
 
 
 
-//*******************************************************.
-//*** TODO REFACTOR CODE BELOW THEY ARE ADOPTED FROM
-// https://auth0.com/blog/react-tutorial-building-and-securing-your-first-app/
-// ASK ALEX ABOUT THE CODE DON'T MODIFY BELOW;
+/* ROUTES FOR AUTHENTICATION **************************************************/
+// Adapted from https://auth0.com/blog/react-tutorial-building-and-securing-your-first-app/
+// Manage Auth0 secrets via Auth0.com dashboard; login in shared 1Password
+// Responsible Engineer: Alex Zhao
+
 
 // retrieve all questions
 app.get('/', (req, res) => {
@@ -571,20 +603,6 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 });
 
-
-
-// // insert a new question
-// app.post('/', (req, res) => {
-//   const {title, description} = req.body;
-//   const newQuestion = {
-//     id: questions.length + 1,
-//     title,
-//     description,
-//     answers: [],
-//   };
-//   questions.push(newQuestion);
-//   res.status(200).send();
-// });
 // insert a new question
 app.post('/', checkJwt, (req, res) => {
   const {title, description} = req.body;
@@ -599,21 +617,6 @@ app.post('/', checkJwt, (req, res) => {
   res.status(200).send();
 });
 
-// // insert a new answer to a question
-// app.post('/answer/:id', (req, res) => {
-//   const {answer} = req.body;
-//
-//   const question = questions.filter(q => (q.id === parseInt(req.params.id)));
-//   if (question.length > 1) return res.status(500).send();
-//   if (question.length === 0) return res.status(404).send();
-//
-//   question[0].answers.push({
-//     answer,
-//   });
-//
-//   res.status(200).send();
-// });
-//
 // insert a new answer to a question
 app.post('/answer/:id', checkJwt, (req, res) => {
   const {answer} = req.body;
@@ -632,13 +635,16 @@ app.post('/answer/:id', checkJwt, (req, res) => {
 
 
 
-//// ********************************************
-// STEFFEN's ROUTES FOR USERS;
-// OWNER: STEFFEN:
+
+
+
+
+/* ROUTS FOR EDITING USER PROFILE ********************************************/
+// Responsible Engineer: Steffen Cornwell {steffenc@wharton.upenn.edu}
 
 app.get( '/getProfile', (req, res) =>{
   console.log(req.body);
-  Profile.find({'user': req.body.query}).exec((err, profile)=>{
+  Profile.find({'user': req.body.query}).exec((err, profile) => {
     res.send(profile);
   });
 })
@@ -659,6 +665,8 @@ app.post( '/setProfile', (req, res) =>{
     });
   });
 
+
+/* ROUNTES END ****************************************************************/
 
 
 // start the server
