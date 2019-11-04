@@ -1,4 +1,5 @@
-/*
+/******************************************************************************
+
 BetterReads
 (betterreads.org)
 
@@ -7,9 +8,16 @@ Fall 2019
 CIS 350
 University of Pennsylvania
 PM: Irene Zhang
+Professor Chris Murphy
 
-// TODO: Add name to each method / route so we know who to chase down for bugs
-*/
+Abeeku Bondzie, Daniel Colson, Steffen Cornwell, Sam Oshay, Alex Zhao
+[ dcolson, alexzhao, abeeku ] @ seas.upenn.edu
+[ oshay, steffenc ] @ wharton.upenn.edu
+
+TODO: Add name to each method / route so we know who to chase down for bugs
+********************************************************************************/
+
+
 
 
 /* External Libraries *********************************************************
@@ -56,7 +64,7 @@ var Topic = require('./models/topic.js')
 var User = require('./models/user.js')
 var Book = require('./models/book.js')
 
-/*********************************************************************** */
+/******************************************************************************/
 
 // define the Express app
 const app = express();
@@ -86,7 +94,7 @@ app.set("view engine", "ejs");
 
 
 
-/***************************************/
+/******************************************************************************/
 // app.get('/', (req, res)=>{
 //   res.sendFile('index.html', {root: __dirname });
 // });
