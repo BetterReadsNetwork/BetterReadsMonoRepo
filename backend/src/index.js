@@ -95,9 +95,9 @@ app.set("view engine", "ejs");
 
 
 /******************************************************************************/
-// app.get('/', (req, res)=>{
-//   res.sendFile('index.html', {root: __dirname });
-// });
+ app.get('/', (req, res)=>{
+   res.sendFile('index.html', {root: __dirname });
+ });
 
 
 
@@ -498,6 +498,64 @@ app.get('/posts', (req, res)=>{
     });
   });// .sort({created_on: -1}) // Sort by created_on desc
 });
+//API
+
+app.get('/api/books', (req, res)=>{
+  Book.find(function(err, books, count) {
+		res.json(books)
+  });// .sort({created_on: -1}) // Sort by created_on desc
+});
+app.get('/api/posts', (req, res)=>{
+  Post.find(function(err, posts, count) {
+		res.json(posts)
+  });// .sort({created_on: -1}) // Sort by created_on desc
+});
+app.get('/api/discussions', (req, res)=>{
+  Thread.find(function(err, threads, count) {
+      res.json(threads)
+  });// .sort({created_on: -1}) // Sort by created_on desc
+});
+
+app.get('/api/discussions/:id', (req, res)=>{
+    Thread.findById(req.params.id, function(err, thread) {
+      Post.find({'thread': [req.params.id]}).exec( (err,pp)=>
+				res.json({
+					thread,
+					posts: pp
+				})
+      )
+
+    });
+});
+app.post('/api/browse', (req, res)=>{
+ // res.type('html').status(200);
+  var quer = req.body.query.split(' ').join('+')
+https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+quer, (resp) => {
+  let data = '';
+
+  resp.on('data', (chunk) => {
+     data += chunk;
+  });
+
+  resp.on('end', () => {
+    parser.parseString(data, (error, result)=>{
+     	res.json(result['GoodreadsResponse']['search'])
+			// res.render('browse',{
+     //   books: result['GoodreadsResponse']['search'],
+   //   } )
+   });
+
+    res.end()
+  });
+
+     res.end
+  }).on("error", (err) => {
+  console.log("Error: " + err.message);
+  });
+});
+
+//API
+
 
 app.get('/discussions/:id', (req, res)=>{
     Thread.findById(req.params.id, function(err, thread) {
@@ -578,6 +636,7 @@ app.post( '/browseDiscussions',(req, res) =>{
 
 
 // retrieve all questions
+/*
 app.get('/', (req, res) => {
   const qs = questions.map(q => ({
     id: q.id,
@@ -587,7 +646,7 @@ app.get('/', (req, res) => {
   }));
   res.send(qs);
 });
-
+*/
 // get a specific question
 app.get('/:id', (req, res) => {
   const question = questions.filter(q => (q.id === parseInt(req.params.id)));
@@ -678,6 +737,6 @@ app.post( '/setProfile', (req, res) =>{
 
 
 // start the server
-app.listen(8081, () => {
-  console.log('listening on port 8081');
+app.listen(4444, () => {
+  console.log('listening on port 4444');
 });
