@@ -9,11 +9,31 @@ Updated November 3, 2019
 
 
 ## Running Backend:
+- open `/backend/src/index.js` and comment out: 
+```
+app.get('/', (req, res) => {
+  const qs = questions.map(q => ({
+    id: q.id,
+    title: q.title,
+    description: q.description,
+    answers: q.answers.length,
+  }));
+  res.send(qs);
+});
+```
+- in the same file, uncomment:
+```
+app.get('/', (req, res)=>{
+    res.sendFile('index.html', {root: __dirname });
+});
+```
 - `cd backend`
 - `npm install`
 - install mongodb community: refer to external documentation
+- `mongod --config /usr/local/etc/mongod.conf`, leave this terminal window open 
+- open another terminal window, and in that window type
 - `node src`
-- The app will run on `localhost:8081`
+- The app will run on `localhost:4444`
 - (Extra) `node app.js`: What is this `app.js` for? Does it perform any other functionality not found in `index.js`? @Abeeku (@Alex wonders //TODO)
 
 ## Running frontend:
@@ -38,7 +58,6 @@ app.get('/', (req, res)=>{
     res.sendFile('index.html', {root: __dirname });
 });
 ```
-Running the backend would require the reverse;
 
 - `cd frontend`
 - `npm install`
