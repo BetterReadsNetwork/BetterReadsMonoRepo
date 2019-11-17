@@ -527,9 +527,9 @@ app.get('/api/discussions/:id', (req, res)=>{
 
     });
 });
-app.post('/api/browse', (req, res)=>{
+app.get('/api/browse/:query', (req, res)=>{
  // res.type('html').status(200);
-  var quer = req.body.query.split(' ').join('+')
+  var quer = req.params.query.split(' ').join('+')
 https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+quer, (resp) => {
   let data = '';
 
