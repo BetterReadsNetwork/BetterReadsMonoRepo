@@ -2,9 +2,16 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
+<<<<<<< HEAD
   "packagerPid": 2069,
   "expoServerNgrokUrl": "https://za-6b2.abeeku.first-navigation.exp.direct",
   "packagerNgrokUrl": "https://packager.za-6b2.abeeku.first-navigation.exp.direct",
   "ngrokPid": 2084,
+=======
+  "packagerPid": 29148,
+  "expoServerNgrokUrl": "https://za-6b2.anonymous.first-navigation.exp.direct",
+  "packagerNgrokUrl": "https://packager.za-6b2.anonymous.first-navigation.exp.direct",
+  "ngrokPid": 29172,
+>>>>>>> 10ea7e0e5c269ca67e668a68050e392745311904
   "webpackServerPort": null
 }

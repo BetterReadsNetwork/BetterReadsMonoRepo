@@ -63,6 +63,7 @@ var Nofitication =require('./models/notification.js')
 var Topic = require('./models/topic.js')
 var User = require('./models/user.js')
 var Book = require('./models/book.js')
+var Profile = require('./models/profile.js')
 
 /******************************************************************************/
 
@@ -710,6 +711,7 @@ app.post('/answer/:id', checkJwt, (req, res) => {
 // Responsible Engineer: Steffen Cornwell {steffenc@wharton.upenn.edu}
 
 app.get( '/getProfile', (req, res) =>{
+  console.log("GET Profile")
   console.log(req.body);
   Profile.find({'user': req.body.query}).exec((err, profile) => {
     res.send(profile);
