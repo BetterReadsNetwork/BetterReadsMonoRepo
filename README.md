@@ -74,7 +74,7 @@ Install expo-cli first
 - `cd frontend`
 - `cd betterReadsApp`
 -  `expo start`
-Scan the qr code or run it in the android emulator
+-	Scan the qr code or run it in the android emulator
 
 
 # MESSAGING TO DO
