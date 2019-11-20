@@ -1,0 +1,10 @@
+{
+  "devToolsPort": 19002,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 9288,
+  "expoServerNgrokUrl": "https://hn-cdt.abeeku.first-navigation-2.exp.direct",
+  "packagerNgrokUrl": "https://packager.hn-cdt.abeeku.first-navigation-2.exp.direct",
+  "ngrokPid": 9306,
+  "webpackServerPort": null
+}
