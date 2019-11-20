@@ -70,12 +70,12 @@ app.get('/', (req, res)=>{
 are iteratively being integrated into the `frontend` and `backend` folders respectively, and will be deleted eventually UPDATE: they have been merged with `frontend` and `backend`!!
 # Running app on Expo
 Install expo-cli first
-```
+
 - `cd frontend`
 - `cd betterReadsApp`
 -  `expo start`
 Scan the qr code or run it in the android emulator
-```
+
 
 # MESSAGING TO DO
 - Prevent adding a chat when user is blocked.
