@@ -445,11 +445,21 @@ app.get('/createThread', (req, res)=>{
     title       : req.query.title,
     created_at  : Date.now()
   }).save(function(err, thread, count){
+		console.log("Thread saved")
     res.redirect('/discussions');
   });
 });
 
 
+app.get('/createSession', (req, res)=>{
+	User.find
+  new Session({
+    title       : req.query.title,
+    created_at  : Date.now()
+  }).save(function(err, thread, count){
+    res.redirect('/discussions');
+  });
+});
 
 app.post('/createPost', (req, res)=>{
   Thread.findById(req.body.thread_id, function(err, thread) {
@@ -480,6 +490,11 @@ app.get('/createBook', (req, res)=>{
   res.redirect('/books');
 });
 
+app.post('/createUser', (req, res)=>{
+  new User({name: req.body.username,password: req.body.password, notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
+
+  res.redirect('/');
+});
 app.get('/createUser', (req, res)=>{
   new User({name: 'Roonil Wazlib', notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
 
@@ -582,7 +597,15 @@ app.get('/users/:id', (req, res)=>{
 
     });
 });
+app.get('/login', (req, res)=>{
+	res.render('login');
+});
+
+app.get('/register', (req, res)=>{
+	res.render('register');
+});
 app.get('/discussions', (req, res)=>{
+
   Thread.find(function(err, threads, count) {
     res.render('threads', {
       threads: threads

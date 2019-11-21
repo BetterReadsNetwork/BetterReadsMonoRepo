@@ -8,7 +8,9 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
 //  _id: Number,
   name: String,
+  password: String,
   created_on: Date,
+  logged_in: { Boolean,default: false },
   threads_following: [{type: Schema.Types.ObjectId, ref: 'Thread'}],
   privateThreads: [{type: Schema.Types.ObjectId, ref: 'Thread'}],
   notifications: [String]
