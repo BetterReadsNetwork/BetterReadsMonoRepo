@@ -1,22 +1,22 @@
 <html>
-  <ul>
+
+  <a href="/chats/<%= user %>">
+      <img src="https://image.flaticon.com/icons/png/512/8/8764.png" style="width:42px;height:42px;border:0;">
+  </a>
+
+  <ul id="message_list">
     <% msgs.forEach((msg) => { %>
 
-    <li><%= msg.from_uuid %>: <%= msg.message %></li>
+    <li id="message_text"><%= msg.from_uuid %>: <%= msg.message %></li>
 
     <% }); %>
   </ul>
 
-  <form action="/api/send_message/<%= user %>/<%= other %>" method="post">
-    Message: <input name="msg" />
-    <p>
-      <input type="submit" value="Send message." />
-    </p>
-  </form>
+
 
   <% var rand = Math.floor(Math.random() * 900000000) + 100000000; %> <% var
   link = 'https://appr.tc/r/' + rand; %>
-  <form action="/api/send_message/<%= user %>/<%= other %>" method="post">
+  <form action="/api/send_message/<%= user %>/<%= other %>" method="post" id="video_chat_form">
     <input
       name="msg"
       type="submit"
@@ -24,5 +24,57 @@
     />
   </form>
 
-  <a href="/chats/<%= user %>">Back to My Chats</a>
+
+
+
+
+  <form action="/api/send_message/<%= user %>/<%= other %>" method="post" id="send_message_form">
+    <input name="msg" / placeholder="Type a message..." id="send_message_input">
+    <input type="submit" value="Send message." id="send_message_btn"/>
+  </form>
 </html>
+
+
+<style>
+
+  #send_message_form {
+    position: absolute;
+    bottom: 20px;
+    left: 20%;
+  }
+
+  #send_message_input {
+    width: 800px;
+    height: 35px;
+  }
+
+  #send_message_btn {
+    border: 0;
+    box-shadow: none;
+    border-radius: 0px;
+    background-color: lightgrey;
+    height: 35px;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  #video_chat_form {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  #message_list {
+    position: absolute;
+    left: 20%;
+    top: 20%;
+  }
+
+  #message_text {
+    text-decoration: none;
+    display: block;
+    font-family: Verdana, sans-serif;  
+  }
+
+
+</style>
