@@ -22,8 +22,39 @@ export default class Home extends React.Component {
           <TextInput name="cpassword" placeholder="confirm password" onChangeText={(text)=>this.setState({cpassword:text}) }/>
         <Button
           title="Register"
-          onPress={() => this.props.navigation.navigate('Register', {query: this.state.query})}
-        />
+         onPress={()=>{
+           
+           return fetch(this.state.base+'/createUser', {
+      method: 'POST',
+    headers: {
+   // Accept: 'application/json',
+   // 'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    username: this.state.username,
+    password: this.state.password,
+  })
+
+    }).then(res=>res.json())
+    .then(response =>{
+      console.error("Sucess");
+      
+  },
+   this.props.navigation.navigate('Home', {last: "Discussion"})
+ //      this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
+     //  this.forceUpdate()
+       
+        // this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
+    
+
+    ).catch((error) =>{
+      console.error(error);
+  //    this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
+   //   this.props.navigation.navigate('Discussion', {id:this.state.dataSource.thread._id})
+     // this.forceUpdate()
+       this.setState({ state: this.state });
+    });
+        }} />
        
       </View>
     );

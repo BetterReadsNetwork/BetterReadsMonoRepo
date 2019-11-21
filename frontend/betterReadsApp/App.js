@@ -8,6 +8,7 @@ import Referrer from "./views/Referrer";
 import Profile from "./views/Profile";
 import Login from "./views/Login";
 import Register from "./views/Register";
+import Users from "./views/Users";
 import { Button, View, Text ,Image, TextInput,FlatList,ActivityIndicator } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -23,7 +24,8 @@ const RootStack = createStackNavigator(
     Referrer: Referrer,
     Profile: Profile,
     Register: Register,
-    Login: Login
+    Login: Login,
+    Users: Users
   },
   {
     initialRouteName: 'Home',

@@ -521,6 +521,12 @@ app.get('/api/books', (req, res)=>{
 		res.json(books)
   });// .sort({created_on: -1}) // Sort by created_on desc
 });
+
+app.get('/api/users', (req, res)=>{
+  User.find(function(err, users, count) {
+		res.json(users)
+  });// .sort({created_on: -1}) // Sort by created_on desc
+});
 app.get('/api/posts', (req, res)=>{
   Post.find(function(err, posts, count) {
 		res.json(posts)
