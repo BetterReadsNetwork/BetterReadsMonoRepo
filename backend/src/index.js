@@ -866,6 +866,6 @@ app.post( '/setProfile', (req, res) =>{
 
 
 // start the server
-app.listen(4444, () => {
+app.listen(process.env.PORT || 4444, () => {
   console.log('listening on port 4444');
 });
