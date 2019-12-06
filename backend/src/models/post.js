@@ -9,6 +9,8 @@ var PostSchema = new Schema({
   //_id: Number,
   content: String,
   created_at: Date,
+  user_id: Number,
+  user_name: String,
   thread: [{type: Schema.Types.ObjectId, ref: 'Thread'}]
 });
 

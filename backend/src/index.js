@@ -113,10 +113,33 @@ app.use(session({
 }));
 
 /******************************************************************************/
- app.get('/', (req, res)=>{
-   res.sendFile('index.html', {root: __dirname });
- });
+ //app.get('/', (req, res)=>{
+ //  res.sendFile('index.html', {root: __dirname });
+ //});
 
+app.get('/', function (req, res, next) {
+  User.findById(req.session.userId)
+    .exec(function (error, user) {
+      if (error) {
+        return next(error);
+      } else {
+        if (user === null) {
+                   
+          return res.render("index", {user: user})
+        } else {
+
+          return res.render("index", {user: user})
+         // return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
+        }
+      }
+    });
+});
+
+app.get('/listUsers', (q, s) => {
+  User.find({}, (e, u) => {
+    s.send( JSON.stringify( u ) );
+  });
+})
 
 
 app.use("/api/block_user/:id", (req, res) => {
@@ -600,11 +623,18 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
 app.get('/discussions/:id', (req, res)=>{
     Thread.findById(req.params.id, function(err, thread) {
       Post.find({'thread': [req.params.id]}).exec( (err,pp)=>
-      res.render('thread', {
+      {   
+        User.findById(req.session.userId).exec((e, u)=>{
+             
+        res.render('thread', {
         thread: thread,
-        posts: pp
-
-      })
+        posts: pp,
+        user: u
+        })
+        
+      }  );
+      
+    }
       )
 
     });

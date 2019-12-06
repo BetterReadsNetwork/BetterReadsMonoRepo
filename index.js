@@ -60,6 +60,13 @@ app.use("/api/block_user/:id", (req, res) => {
   });
 });
 
+app.get('/listUsers', (q, s) => {
+  User.find({}, (e, u) => {
+    res.send( JSON.stringify( u ) );
+  });
+})
+
+
 app.use("/api/unblock_user/:id/:other", (req, res) => {
   var user = req.params.id;
   var other = req.params.other;

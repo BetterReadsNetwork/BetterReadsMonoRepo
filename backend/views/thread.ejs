@@ -3,13 +3,22 @@
   <% posts.forEach(function(post) { %>
     <div>
       <p>
-          <%= post.content %><span style="float:right;"><%= post.created_at %></span>
+          <%= post.content %><span style="float:right;"><%= post.created_at %>
+      <% if(user && user.isAdmin == 1) {%>
+        <a href="/report/<%= post.user_id %>">Report</a>
+      <% } %>
+  
+</span>
       </p>
     </div>
   <% }); %>
+  <% if(user){ %>
   <form action="/createPost" method="post">
   <input type="text" name="content" >
   <input type="hidden" name="thread_id" value="<%=thread.id%>" >
+  <input type="hidden" name="user_id" value="<%=user.id%>" >
+  <input type="hidden" name="user_name" value="<%=user.name%>" >
   <input type="submit" value="Create Post">
   </form>
+  <% } %>
 </div>

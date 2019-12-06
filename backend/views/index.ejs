@@ -1,0 +1,48 @@
+//TODO: Who is the responsible engineer for this file?
+
+<html>
+  <head>
+  	<title>Browse Books</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen">
+
+	<script>
+		  window.fbAsyncInit = function() {
+				    FB.init({
+							      appId      : '{your-app-id}',
+							      cookie     : true,
+							      xfbml      : true,
+							      version    : '{api-version}'
+							    });
+				      
+				    FB.AppEvents.logPageView();   
+				      
+				  };
+
+  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "https://connect.facebook.net/en_US/sdk.js";
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+	</script>
+  </head>
+<body>
+	<form method='post' action='/browse'>
+		<input type="text" name="query" >
+		<input  type="submit" value="Browse">
+	</form>
+	<form method='post' action='/browseDiscussions'>
+		<input type="text" name="query" >
+		<input  type="submit" value="Browse Discussions">
+	</form>
+	<a href ="/chats/7">Chat</a>
+	<a href ="/discussions">Discussions</a>
+  <% if (user) { %>
+	<a href ="/logout">Logout</a>
+  <% }else { %>
+	<a href ="/login">Login/Register</a>
+  <% }  %>
+
+</body>
+</html>
