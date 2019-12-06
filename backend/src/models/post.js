@@ -11,6 +11,7 @@ var PostSchema = new Schema({
   created_at: Date,
   user_id: Number,
   user_name: String,
+  blocked_user_ids:[Number],
   thread: [{type: Schema.Types.ObjectId, ref: 'Thread'}]
 });
 

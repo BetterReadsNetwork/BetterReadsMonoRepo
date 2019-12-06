@@ -5,7 +5,7 @@
       <p>
           <%= post.content %><span style="float:right;"><%= post.created_at %>
       <% if(user && user.isAdmin == 1) {%>
-        <a href="/report/<%= post.user_id %>">Report</a>
+        <a href="/report/<%= thread.id %>/<%= post.user_id %>">Report</a>
       <% } %>
   
 </span>

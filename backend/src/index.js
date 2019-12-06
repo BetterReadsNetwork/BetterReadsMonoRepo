@@ -503,7 +503,7 @@ app.get('/createSession', (req, res)=>{
 
 app.post('/createPost', (req, res)=>{
   Thread.findById(req.body.thread_id, function(err, thread) {
-
+  if(!thread.blocked_user_ids.includes(req.session.userId))
   new Post({
     content   : req.body.content,
     created_at  : Date.now(),
@@ -523,6 +523,9 @@ app.post('/createPost', (req, res)=>{
       res.redirect('/discussions/'+req.body.thread_id);
     });
   });
+  }  else{
+    
+    }
   });
 });
 app.get('/createBook', (req, res)=>{
@@ -588,6 +591,16 @@ app.get('/api/discussions/:id', (req, res)=>{
 				})
       )
 
+    });
+});
+
+app.get('/report/:thread_id/:user_id', (req, res)=>{
+    //TODO check if user is an admin
+      Thread.findById(req.params.thread_id, function(err, thread) {
+         thread.blocked_user_ids.push(req.params.user_id);
+         thread.save();
+         res.redirect('/');
+      });
     });
 });
 app.get('/api/browse/:query', (req, res)=>{
