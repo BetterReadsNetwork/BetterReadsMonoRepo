@@ -1,8 +1,18 @@
 <div>
 <h1>Login</h1>
-<form action="/createSession" method="POST">
-	<input type="text" name="username"/>
-	<input type="text" name="password"/>
+<form action="/login" method="POST">
+	<input type="text" name="logemail" placeholder="Email"/>
+	<input type="password" name="logpassword"/>
 	<input type="submit" text="Login"/>
+</form>
+</div>
+<div>
+<h1>Register</h1>
+<form action="/login" method="POST">
+	<input type="text" name="email" placeholder="Email"/>
+	<input type="text" name="username" placeholder="Username"/>
+	<input type="password" name="password"/>
+	<input type="password" name="passwordConf" placeholder="Confirm Password"/>
+	<input type="submit" text="Register"/>
 </form>
 </div>

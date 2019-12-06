@@ -43,8 +43,17 @@ const morgan = require('morgan');
 const url = require("url");
 const https = require("https");
 const xml2js = require('xml2js');
+var session = require('express-session')
+var MongoStore = require('connect-mongo')(session);
+
+var mongoose = require('mongoose');
+var mongoDb = 'mongodb+srv://BetterReadsAdmin:yVFQUxYTrZFWt2Usiec4Wymw4asHz76xqthSXx5y@betterreads-teszn.gcp.mongodb.net/better_reads?retryWrites=true&w=majority';
+mongoose.connect(mongoDb, {useNewUrlParser: true} );
+var db = mongoose.connection;
 
 /* Authentication Libraries ****
+var MongoStore = require('connect-mongo')(session);
+ * 
 - `express-jwt`:  A middleware that validates a JSON Web Token (JWT) and set the
 req.user with its attributes.
 - `jwks-rsa`: A library to retrieve RSA public keys from a JWKS (JSON Web Key Set) endpoint.
@@ -94,6 +103,14 @@ app.use(morgan('combined'));
 app.set("view engine", "ejs");
 
 
+app.use(session({
+  secret: 'work hard',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db
+  })
+}));
 
 /******************************************************************************/
  app.get('/', (req, res)=>{
@@ -491,6 +508,7 @@ app.get('/createBook', (req, res)=>{
 });
 
 app.post('/createUser', (req, res)=>{
+	console.log("Test create user")
   new User({name: req.body.username,password: req.body.password, notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
 
   res.redirect('/');
@@ -607,6 +625,84 @@ app.get('/login', (req, res)=>{
 	res.render('login');
 });
 
+app.post('/login', function (req, res, next) {
+  // confirm that user typed same password twice
+  if (req.body.password !== req.body.passwordConf) {
+    var err = new Error('Passwords do not match.');
+    err.status = 400;
+    res.send("passwords dont match");
+    return next(err);
+  }
+
+  if (req.body.email &&
+    req.body.username &&
+    req.body.password &&
+    req.body.passwordConf) {
+
+    var userData = {
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+    }
+
+    User.create(userData, function (error, user) {
+      if (error) {
+        return next(error);
+      } else {
+        req.session.userId = user._id;
+        return res.redirect('/profile');
+      }
+    });
+
+  } else if (req.body.logemail && req.body.logpassword) {
+    User.authenticate(req.body.logemail, req.body.logpassword, function (error, user) {
+      if (error || !user) {
+        var err = new Error('Wrong email or password.');
+        err.status = 401;
+        return next(err);
+      } else {
+        req.session.userId = user._id;
+        return res.redirect('/profile');
+      }
+    });
+  } else {
+    var err = new Error('All fields required.');
+    err.status = 400;
+    return next(err);
+  }
+})
+
+// GET route after registering
+app.get('/profile', function (req, res, next) {
+  User.findById(req.session.userId)
+    .exec(function (error, user) {
+      if (error) {
+        return next(error);
+      } else {
+        if (user === null) {
+          var err = new Error('Not authorized! Go back!');
+          err.status = 400;
+          return next(err);
+        } else {
+          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
+        }
+      }
+    });
+});
+
+// GET for logout logout
+app.get('/logout', function (req, res, next) {
+  if (req.session) {
+    // delete session object
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err);
+      } else {
+        return res.redirect('/');
+      }
+    });
+  }
+});
 app.get('/register', (req, res)=>{
 	res.render('register');
 });
