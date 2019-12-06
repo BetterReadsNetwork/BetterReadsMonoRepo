@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, View, Text ,Image, TextInput,FlatList,ActivityIndicator } from 'react-native';
+import { Button, View, Text ,Image, Linking, TextInput,FlatList,ActivityIndicator } from 'react-native';
 export default class Home extends React.Component {
 
  
@@ -37,10 +37,8 @@ export default class Home extends React.Component {
           title="Profile"
           onPress={() => this.props.navigation.navigate('Profile')}
         />
-         <Button
-          title="Chat"
-          onPress={() => this.props.navigation.navigate('Chat')}
-        />
+        <Button title="Chat" onPress={ ()=>{ Linking.openURL('messenger://app')}} />
+        
         <Button
           title="Register"
           onPress={() => this.props.navigation.navigate('Register')}
