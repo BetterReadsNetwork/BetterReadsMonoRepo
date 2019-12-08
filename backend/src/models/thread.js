@@ -14,7 +14,7 @@ var ThreadSchema = new Schema({
   owner: {type: Schema.Types.ObjectId, ref: 'User'},
   users: [{type: Schema.Types.ObjectId, ref: 'User'}],
   viewStatus: String,
-  blocked_user_ids: [Number],
+  blocked_user_ids: [String],
   posts: [{type: Schema.Types.ObjectId, ref: 'Post'}]
 });
 module.exports = mongoose.model('Thread', ThreadSchema);

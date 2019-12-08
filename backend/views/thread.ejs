@@ -4,7 +4,11 @@
     <div>
       <p>
           <%= post.content %><span style="float:right;"><%= post.created_at %>
-      <% if(user && user.isAdmin == 1) {%>
+        <% if(post.user_name) { %>
+        <span>-<%= post.user_name %>-</span>
+        <% } %>
+      <% if(user && user.username == "admin2") {%>
+
         <a href="/report/<%= thread.id %>/<%= post.user_id %>">Report</a>
       <% } %>
   
@@ -17,8 +21,12 @@
   <input type="text" name="content" >
   <input type="hidden" name="thread_id" value="<%=thread.id%>" >
   <input type="hidden" name="user_id" value="<%=user.id%>" >
-  <input type="hidden" name="user_name" value="<%=user.name%>" >
+  <input type="hidden" name="user_name" value="<%=user.username%>" >
   <input type="submit" value="Create Post">
+  <%= user.test %>
   </form>
+  <% }  else{ %>
+  <p>Log in to Post</p>
   <% } %>
+
 </div>

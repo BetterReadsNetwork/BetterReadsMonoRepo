@@ -13,25 +13,30 @@ var UserSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
+//    required: true,
     trim: true
   },
   username: {
     type: String,
     unique: true,
-    required: true,
+  //  required: true,
     trim: true
   },
   password: {
     type: String,
-    required: true,
+   // required: true,
+  },
+  facebook: {
+    id: String,
+    token: String,
+    email: String,
+    name: String
   }
 });
 
 /*
 	var UserSchema = new Schema({
-//  _id: Number,
-  name: String,
+//  _id: Number,  name: String,
   password: String,
   created_on: Date,
   logged_in: { Boolean,default: false },
@@ -60,9 +65,26 @@ UserSchema.statics.authenticate = function (email, password, callback) {
     });
 }
 
+module.exports.getUserByUsername = function(username, callback){
+	var query = {username: username};
+	User.findOne(query, callback);
+}
 //hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {
+  
   var user = this;
+  if(user.facebook.id){
+    console.log('special')
+    if(user.email == null){
+      user.email = "facebook@facebook.com";
+    }
+    if(user.username == null){
+      user.username = user.facebook.id;
+    }
+    next();
+   }
+  else{
+
   bcrypt.hash(user.password, 10, function (err, hash) {
     if (err) {
       return next(err);
@@ -70,6 +92,7 @@ UserSchema.pre('save', function (next) {
     user.password = hash;
     next();
   })
+  }
 });
 
 var User = mongoose.model('User', UserSchema);

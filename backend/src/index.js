@@ -47,6 +47,7 @@ var session = require('express-session')
 var MongoStore = require('connect-mongo')(session);
 
 var mongoose = require('mongoose');
+var passport = require('passport'), FacebookStrategy = require('passport-facebook').Strategy;
 var mongoDb = 'mongodb+srv://BetterReadsAdmin:yVFQUxYTrZFWt2Usiec4Wymw4asHz76xqthSXx5y@betterreads-teszn.gcp.mongodb.net/better_reads?retryWrites=true&w=majority';
 mongoose.connect(mongoDb, {useNewUrlParser: true} );
 var db = mongoose.connection;
@@ -99,9 +100,8 @@ app.use(cors());
 // log HTTP requests
 app.use(morgan('combined'));
 
-// Set backend view engine to EJS
-app.set("view engine", "ejs");
 
+//app.use(cookieParser('abcdefg'));
 
 app.use(session({
   secret: 'work hard',
@@ -112,6 +112,10 @@ app.use(session({
   })
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+// Set backend view engine to EJS
+app.set("view engine", "ejs");
 /******************************************************************************/
  //app.get('/', (req, res)=>{
  //  res.sendFile('index.html', {root: __dirname });
@@ -121,10 +125,18 @@ app.get('/', function (req, res, next) {
   User.findById(req.session.userId)
     .exec(function (error, user) {
       if (error) {
+        console.log("error")
         return next(error);
       } else {
         if (user === null) {
-                   
+          if(req.user){  
+            console.log("req.user")
+            console.log(req.user.id)
+          return res.render("index", {user: req.user})
+          }else{
+            console.log("undefined")
+          }
+          //if(re)
           return res.render("index", {user: user})
         } else {
 
@@ -503,12 +515,19 @@ app.get('/createSession', (req, res)=>{
 
 app.post('/createPost', (req, res)=>{
   Thread.findById(req.body.thread_id, function(err, thread) {
-  if(!thread.blocked_user_ids.includes(req.session.userId))
-  new Post({
+  if((req.session && req.session.userId && !thread.blocked_user_ids.includes(req.session.userId.toString())) || req.user){
+    
+  if(req.user && thread.blocked_user_ids.includes(req.user.id.toString())){
+    res.redirect('/discussions')
+  }
+  console.log("here") 
+    new Post({
     content   : req.body.content,
+    user_id: req.body.user_id,
+    user_name: req.body.user_name,
     created_at  : Date.now(),
     thread      : thread,
-   }).save(function(err, post, count){
+   }).save( (err, post, count)=>{
     thread.posts.push(post)
      //var pp=[]
      // thread.posts.forEach(function(v){pp.push(Post.findById(v))} )
@@ -523,9 +542,11 @@ app.post('/createPost', (req, res)=>{
       res.redirect('/discussions/'+req.body.thread_id);
     });
   });
-  }  else{
-    
-    }
+
+  } else{
+    console.log("Blocked")
+    res.redirect('/discussions/'+req.body.thread_id);
+  } 
   });
 });
 app.get('/createBook', (req, res)=>{
@@ -597,11 +618,11 @@ app.get('/api/discussions/:id', (req, res)=>{
 app.get('/report/:thread_id/:user_id', (req, res)=>{
     //TODO check if user is an admin
       Thread.findById(req.params.thread_id, function(err, thread) {
+        console.log(req.params.user_id)
          thread.blocked_user_ids.push(req.params.user_id);
          thread.save();
          res.redirect('/');
       });
-    });
 });
 app.get('/api/browse/:query', (req, res)=>{
  // res.type('html').status(200);
@@ -636,7 +657,9 @@ https.get("https://www.goodreads.com/search.xml?key=t2cVFqoGd4F2Ppfdc2ONVQ&q="+q
 app.get('/discussions/:id', (req, res)=>{
     Thread.findById(req.params.id, function(err, thread) {
       Post.find({'thread': [req.params.id]}).exec( (err,pp)=>
-      {   
+      {  
+        if(req.session && req.session.userId){
+        console.log("session exists")
         User.findById(req.session.userId).exec((e, u)=>{
              
         res.render('thread', {
@@ -646,6 +669,17 @@ app.get('/discussions/:id', (req, res)=>{
         })
         
       }  );
+        }else{
+         console.log(req.user.id)               
+        User.findById(req.user.id).exec((e, us)=>{
+             
+        res.render('thread', {
+        thread: thread,
+        posts: pp,
+        user: us
+        })
+        });
+        }
       
     }
       )
@@ -693,7 +727,7 @@ app.post('/login', function (req, res, next) {
         return next(error);
       } else {
         req.session.userId = user._id;
-        return res.redirect('/profile');
+        return res.redirect('/');
       }
     });
 
@@ -705,7 +739,7 @@ app.post('/login', function (req, res, next) {
         return next(err);
       } else {
         req.session.userId = user._id;
-        return res.redirect('/profile');
+        return res.redirect('/');
       }
     });
   } else {
@@ -905,6 +939,72 @@ app.post( '/setProfile', (req, res) =>{
   });
 
 
+app.post('/flogin',
+  passport.authenticate('local'),
+  function(req, res) {
+    res.send(req.user);
+  }
+);
+app.get('/flogout', function(req, res){
+	req.logout();
+	res.send(null)
+});
+//var FacebookStrategy = require('passport-facebook').Strategy;
+passport.use(new FacebookStrategy({
+    clientID: "281402649481939",
+    clientSecret: "b5637c3cb1fe728595b0ad1b2b9055db",
+    callbackURL: "http://localhost:4444/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    console.log("Profile id "+profile.id);
+    User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+      if (err){
+        console.log("wewew err")
+        return done(err);
+      }
+      if (user) return done(null, user);
+      else {
+        // if there is no user found with that facebook id, create them
+        var newUser = new User();
+
+      console.log("Not Found");
+        // set all of the facebook information in our user model
+        newUser.facebook.id = profile.id;
+        newUser.facebook.token = accessToken;
+      console.log("Not Found");
+        newUser.facebook.name  = profile.displayName;
+        newUser.username = profile.username
+      console.log("Not Found");
+        if (typeof profile.emails != 'undefined' && profile.emails.length > 0)
+          newUser.facebook.email = profile.emails[0].value;
+      console.log("Not Found");
+
+        // save our user to the database
+        newUser.save(function(err) {
+            if (err) throw err;
+            console.log("Created new user")
+            return done(null, newUser);
+        });
+      }
+    });
+  }
+));
+
+app.get('/auth/facebook',
+  passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 /* ROUNTES END ****************************************************************/
 
 
