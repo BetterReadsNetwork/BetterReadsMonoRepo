@@ -1,18 +1,73 @@
 <div>
 <h1>Login</h1>
-<form action="/login" method="POST">
+<form name="loginF" action="/login"  onsubmit="return validateL()" method="POST">
 	<input type="text" name="logemail" placeholder="Email"/>
-	<input type="password" name="logpassword"/>
-	<input type="submit" text="Login"/>
+	<input type="password" name="logpassword" placeholder="Password"/>
+	<input type="submit" onsubmit="return validateL()" text="Login"/>
 </form>
 </div>
 <div>
 <h1>Register</h1>
-<form action="/login" method="POST">
+<form name="registerF" action="/login" method="POST" onsubmit="return validateR()" >
 	<input type="text" name="email" placeholder="Email"/>
 	<input type="text" name="username" placeholder="Username"/>
-	<input type="password" name="password"/>
+	<input type="password" name="password" placeholder="Password"/>
 	<input type="password" name="passwordConf" placeholder="Confirm Password"/>
-	<input type="submit" text="Register"/>
+	<input type="submit"  onsubmit="return validateR()" text="Register"/>
 </form>
 </div>
+<script type="text/javascript">
+function validateEmail(mail) 
+{
+
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+  {
+    return (true)
+  }
+    alert("You have entered an invalid email address!")
+    return (false)
+}
+function validateL() {
+  var em = document.forms["loginF"]["logemail"].value;
+  if (em == "") {
+    alert("Email must be filled out");
+    return false;
+  }
+  
+  if(!validateEmail(em)){
+    return false;
+  }
+  var pa = document.forms["loginF"]["logpassword"].value;
+if (pa == "") {
+    alert("Password must be filled out");
+    return false;
+  }
+}
+function validateR() {
+  var em = document.forms["registerF"]["email"].value;
+  if (em == "") {
+    alert("Email must be filled out");
+    return false;
+  }
+  
+  if(!validateEmail(em)){
+    return false;  
+  }
+  var pa = document.forms["registerF"]["password"].value;
+if (pa == "") {
+    alert("Password must be filled out");
+    return false;
+  }
+  var us = document.forms["registerF"]["username"].value;
+  if (us == "") {
+    alert("Username must be filled out");
+    return false;
+  }
+  
+  var pac = document.forms["registerF"]["passwordconf"].value;
+if (pac == "") {
+    alert("Password Confirmation must be filled out");
+    return false;
+  }
+}
+</script>
