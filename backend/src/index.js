@@ -67,13 +67,15 @@ const jwksRsa = require('jwks-rsa');
 var Message = require("./models/Message.js");
 var Chat = require("./models/Chat.js");
 var Block = require("./models/Block.js");
-var Post = require('./models/post.js')
-var Thread = require('./models/thread.js')
-var Nofitication =require('./models/notification.js')
-var Topic = require('./models/topic.js')
-var User = require('./models/user.js')
-var Book = require('./models/book.js')
-var Profile = require('./models/profile.js')
+var Post = require('./models/post.js');
+var Thread = require('./models/thread.js');
+var Nofitication =require('./models/notification.js');
+var Topic = require('./models/topic.js');
+var User = require('./models/user.js');
+var Book = require('./models/book.js');
+var Profile = require('./models/profile.js');
+var FollowBook = require('./models/followsBook.js');
+var BookFollower = require('./models/BookFollower.js');
 
 /******************************************************************************/
 
@@ -554,17 +556,38 @@ app.get('/createBook', (req, res)=>{
   res.redirect('/books');
 });
 
+app.get('/followBook', (req, res)=>{
+  User.findById(req.session.userId)
+    .exec(function (error, user) {
+      if (error) {
+        return next(error);
+      } else {
+        if (user === null) {
+          var err = new Error('Not authorized! Go back!');
+          err.status = 400;
+          return next(err);
+        } else {
+          new FollowBook({title: req.query.title, username: user.username}).save( (a,b,c)=>{});
+          new BookFollower({title: req.query.title, username: user.username}).save( (a,b,c)=>{});
+          res.redirect('/follows'); 
+        }
+      }
+  }); 
+});
+
 app.post('/createUser', (req, res)=>{
 	console.log("Test create user")
   new User({name: req.body.username,password: req.body.password, notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
 
   res.redirect('/');
 });
+
 app.get('/createUser', (req, res)=>{
   new User({name: 'Roonil Wazlib', notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
 
   res.redirect('/');
 });
+
 app.get('/books', (req, res)=>{
   Book.find(function(err, books, count) {
     res.render('books', {
@@ -572,6 +595,38 @@ app.get('/books', (req, res)=>{
     });
   });// .sort({created_on: -1}) // Sort by created_on desc
 });
+
+app.get('/follows', (req, res)=>{
+  FollowBook.find(function(err, follows, count) {
+    BookFollower.find(function(err, followers, count) {
+      res.render('follows', {
+        follows: follows,
+        followers: followers
+      });
+    });
+    
+  });  
+});
+
+// GET route after registering
+app.get('/profile', function (req, res, next) {
+  User.findById(req.session.userId)
+    .exec(function (error, user) {
+      if (error) {
+        return next(error);
+      } else {
+        if (user === null) {
+          var err = new Error('Not authorized! Go back!');
+          err.status = 400;
+          return next(err);
+        } else {
+          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
+        }
+      }
+    });
+});
+
+
 app.get('/posts', (req, res)=>{
   Post.find(function(err, posts, count) {
     res.render('posts', {
