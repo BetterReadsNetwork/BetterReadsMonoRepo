@@ -45,7 +45,10 @@ const https = require("https");
 const xml2js = require('xml2js');
 var session = require('express-session')
 var MongoStore = require('connect-mongo')(session);
-
+/*
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+*/
 var mongoose = require('mongoose');
 var passport = require('passport'), FacebookStrategy = require('passport-facebook').Strategy;
 var mongoDb = 'mongodb+srv://BetterReadsAdmin:yVFQUxYTrZFWt2Usiec4Wymw4asHz76xqthSXx5y@betterreads-teszn.gcp.mongodb.net/better_reads?retryWrites=true&w=majority';
@@ -99,8 +102,32 @@ app.use(cors());
 
 // log HTTP requests
 app.use(morgan('combined'));
+/*
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
 
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
 
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
+*/
 //app.use(cookieParser('abcdefg'));
 
 app.use(session({
@@ -556,7 +583,7 @@ app.get('/createBook', (req, res)=>{
 
 app.post('/createUser', (req, res)=>{
 	console.log("Test create user")
-  new User({name: req.body.username,password: req.body.password, notifications: ['Update yer Profile']}).save( (a,b,c)=>{console.log(b)});
+  new User({name: req.body.username,password: req.body.password, notifications: ['Update yer Profile']}).save( (a,b,c)=>{if(err.code== 11000){res.render("User exists")  }console.log(b)});
 
   res.redirect('/');
 });
@@ -724,7 +751,15 @@ app.post('/login', function (req, res, next) {
 
     User.create(userData, function (error, user) {
       if (error) {
+        console.log(error);
+        console.log("There was an error");
+
+        if(error.code == 11000){
+         console.log(error);
+         return res.send("That User exists. Please go back and resubmit")
+         }else{
         return next(error);
+         }
       } else {
         req.session.userId = user._id;
         return res.redirect('/');
@@ -761,7 +796,7 @@ app.get('/profile', function (req, res, next) {
           err.status = 400;
           return next(err);
         } else {
-          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
+          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>'+user.notifications)
         }
       }
     });
@@ -1003,6 +1038,38 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
     done(err, user);
+  });
+});
+app.post( '/browseDiscussions',(req, res) =>{
+  new Thread({
+    title       : "Church",
+    created_at  : Date.now() 
+  }).save(function(err, thread, count){  
+    Thread.find({'user': req.body.user}).exec((err, threads)=>{
+      res.json(threads);
+    });
+  });
+})
+
+app.post( '/getProfile',(req, res) =>{
+  Profile.findOne({'user': req.body.user}).exec((err, profile)=>{
+    res.json(profile)
+  });
+})
+
+app.post( '/setProfile',(req, res) => {
+  Profile.findOne({'user': req.body.user}).exec((err, profile) => {
+    profile.user = req.body.user;
+    profile.favoriteBook = req.body.favoriteBook;
+    profile.favoriteGenre = req.body.favoriteGenre;
+    profile.ageRange = req.body.ageRange;
+    profile.country = req.body.country;
+    profile.language = req.body.language;
+    profile.gender = req.body.gender;
+    profile.save(function(err, profile, count) { 
+      console.log(err);
+      res.json(profile)
+    });
   });
 });
 /* ROUNTES END ****************************************************************/
