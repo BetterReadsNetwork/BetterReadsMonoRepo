@@ -60,8 +60,8 @@
           container.querySelector("" + commitContainer[i]).innerHTML =
           "<h4> Message: " + response[i].commit.message + "</h4>" +
           "<h4> Author: " + response[i].commit.author.name + "</h4>" +
-          "<h4> Time committed: " + (new Date(response[i].commit.author.date)).toUTCString() +  "</h4>" +
-          "<h4>" + "<a href='" + response[i].html_url + "'>Click me to see more!</a>"  + "</h4>";
+          "<h4> Time Posted: " + (new Date(response[i].commit.author.date)).toUTCString() +  "</h4>" +
+          "<h4>" + "<a href='" + response[i].html_url + "'>Join the Discussion 😊</a>"  + "</h4>";
 
         }
 
@@ -84,7 +84,7 @@
       "<h4> Message: " + localData[posData[i]].message + "</h4>" +
       "<h4> Author: " + localData[posData[i]].author + "</h4>" +
       "<h4> Time committed: " + (new Date(localData[posData[i]].time)).toUTCString() +  "</h4>" +
-      "<h4>" + "<a href='" + localData[posData[i]].link + "'>Click me to see more!</a>"  + "</h4>";
+      "<h4>" + "<a href='" + localData[posData[i]].link + "'>Join the Discussion 😊!</a>"  + "</h4>";
 
     }
   };
