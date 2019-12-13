@@ -592,7 +592,7 @@ app.get('/followBook', (req, res)=>{
         if (user === null) {
           var err = new Error('Not authorized! Go back!');
           err.status = 400;
-          return next(err);
+          return res.redirect('/')
         } else {
           new FollowBook({title: req.query.title, username: user.username}).save( (a,b,c)=>{});
           new BookFollower({title: req.query.title, username: user.username}).save( (a,b,c)=>{});
@@ -751,7 +751,7 @@ app.get('/discussions/:id', (req, res)=>{
         })
         
       }  );
-        }else{
+        }else if(req.user){
          console.log(req.user.id)               
         User.findById(req.user.id).exec((e, us)=>{
              
@@ -761,6 +761,14 @@ app.get('/discussions/:id', (req, res)=>{
         user: us
         })
         });
+        }else{
+          
+             
+        res.render('thread', {
+        thread: thread,
+        posts: pp,
+        user: null
+        })
         }
       
     }
