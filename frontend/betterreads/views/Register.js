@@ -7,7 +7,11 @@ export default class Home extends React.Component {
     super(props);
     this.state= ({ 
       isLoading: true,
-      username:'',password:'',cpassword:''})
+    base:"http://nicereads.herokuapp.com",
+      username:'',
+      password:'',
+      cpassword:''
+      })
      
    
   }
@@ -24,11 +28,11 @@ export default class Home extends React.Component {
           title="Register"
          onPress={()=>{
            
-           return fetch(this.state.base+'/createUser', {
-      method: 'POST',
+            fetch(this.state.base+'/createUser', {
+      method: 'GET',
     headers: {
-   // Accept: 'application/json',
-   // 'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify({
     username: this.state.username,
@@ -37,16 +41,11 @@ export default class Home extends React.Component {
 
     }).then(res=>res.json())
     .then(response =>{
+      console.log("user")
       console.error("Sucess");
+      this.props.navigation.navigate('Home', {last: "Discussion"})
       
   },
-   this.props.navigation.navigate('Home', {last: "Discussion"})
- //      this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
-     //  this.forceUpdate()
-       
-        // this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
-    
-
     ).catch((error) =>{
       console.error(error);
   //    this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})

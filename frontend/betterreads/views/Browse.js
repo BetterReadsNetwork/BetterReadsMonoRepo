@@ -5,7 +5,7 @@ export default class Browse extends React.Component {
    constructor(props){
     super(props);
     this.state ={ isLoading: true, query:                 this.props.navigation.query,
-    base : "https://slippery-fly-59.localtunnel.me"}
+    base : "http://nicereads.herokuapp.com"}
   }
 
   addToLibrary =(book)=>{
