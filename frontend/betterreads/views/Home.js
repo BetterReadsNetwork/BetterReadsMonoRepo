@@ -20,7 +20,7 @@ export default class Home extends React.Component {
           title="Discussions"
           onPress={() => this.props.navigation.navigate('Discussions')}
         />
-        <TextInput name="query" onChangeText={(text)=>this.setState({query:text}) }/>
+        <TextInput name="query" placeholder="query" onChangeText={(text)=>this.setState({query:text}) }/>
         <Button
           title="Browse"
           onPress={() => this.props.navigation.navigate('Browse', {query: this.state.query})}

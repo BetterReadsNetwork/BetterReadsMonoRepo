@@ -236,6 +236,7 @@ class Profile extends Component {
                   </View>
 		              <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text>Favorite Book: </Text>
+                    <Text>{ this.state.favoriteBook}</Text>
                   </View>
 		              <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text>Favorite Genre: </Text>

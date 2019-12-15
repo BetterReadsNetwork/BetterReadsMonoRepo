@@ -7,6 +7,7 @@ export default class Home extends React.Component {
     super(props);
     this.state= ({ 
       isLoading: true,
+      base: "http://nicereads.herokuapp.com",
       username:'',password:'',cpassword:''})
      
    

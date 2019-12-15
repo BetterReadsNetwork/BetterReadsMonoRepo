@@ -1,0 +1,15 @@
+<div>
+  <% follows.forEach(function(book) { %>
+    <div>
+    <p><%= book.title %></p>
+    <% followers.forEach(function(follower) { %>
+    	<%if (book.title === follower.title) {%>
+    		<p><%= follower.username %></p>
+    	<%}%>
+    </div>
+    <% }); %>
+  <% }); %>
+</div>
+
+
+

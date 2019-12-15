@@ -3,7 +3,7 @@ import { Button, View, Text ,Image, TextInput,FlatList,ActivityIndicator } from 
 export default class Discussion extends React.Component {
    constructor(props){
     super(props);
-    this.state ={ isLoading: true,base : "https://slippery-fly-59.localtunnel.me"}
+    this.state ={ isLoading: true,base : "http://nicereads.herokuapp.com"}
   }
   
   componentDidMount(){
@@ -75,9 +75,7 @@ export default class Discussion extends React.Component {
         });
         this.props.navigation.navigate('Referrer')
          this.props.navigation.navigate('Referrer', {last: "Discussion",id: this.state.dataSource.thread._id})
-      //  this.props.navigation.navigate('Referrer', {last: "Discussion",id: this.state.dataSource.thread._id})
-      //  this.forceUpdate()
-    //   this.setState({ state: this.state });
+  
       })
       .catch((error) =>{
         console.error(error);
@@ -85,17 +83,11 @@ export default class Discussion extends React.Component {
       });
   },
    this.props.navigation.navigate('Home', {last: "Discussion",id: this.state.dataSource.thread._id})
- //      this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
-     //  this.forceUpdate()
-       
-        // this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
-    
+ 
 
     ).catch((error) =>{
       console.error(error);
-  //    this.props.navigation.navigate('Discussion', {id: this.state.dataSource.thread._id})
-   //   this.props.navigation.navigate('Discussion', {id:this.state.dataSource.thread._id})
-     // this.forceUpdate()
+  
        this.setState({ state: this.state });
     });
         }}/>

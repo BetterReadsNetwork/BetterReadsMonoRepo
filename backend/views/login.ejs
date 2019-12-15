@@ -2,18 +2,24 @@
 <h1>Login</h1>
 <form name="loginF" action="/login"  onsubmit="return validateL()" method="POST">
 	<input type="text" name="logemail" placeholder="Email"/>
+<br/>
 	<input type="password" name="logpassword" placeholder="Password"/>
-	<input type="submit" onsubmit="return validateL()" text="Login"/>
+<br/>
+	<input type="submit" onsubmit="return validateL()" value="Login"/>
 </form>
 </div>
 <div>
 <h1>Register</h1>
 <form name="registerF" action="/login" method="POST" onsubmit="return validateR()" >
 	<input type="text" name="email" placeholder="Email"/>
+<br/>
 	<input type="text" name="username" placeholder="Username"/>
+<br/>
 	<input type="password" name="password" placeholder="Password"/>
+<br/>
 	<input type="password" name="passwordConf" placeholder="Confirm Password"/>
-	<input type="submit"  onsubmit="return validateR()" text="Register"/>
+<br/>
+	<input type="submit"  onsubmit="return validateR()" value="Register"/>
 </form>
 </div>
 <script type="text/javascript">

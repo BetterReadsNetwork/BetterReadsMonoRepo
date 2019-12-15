@@ -6,12 +6,12 @@ import { Button, View, Text ,Image, TextInput,FlatList,ActivityIndicator } from 
 
   constructor(props){
     super(props);
-     this.state ={ isLoading: true,base : "https://slippery-fly-59.localtunnel.me"}
+     this.state ={ isLoading: true,base : "http://nicereads.herokuapp.com"}
   }
 
   componentDidMount(){
     
-    return fetch(this.state.base+'/api/users')
+    return fetch(this.state.base+'/api/books')
       .then((response) => response.json())
       .then((responseJson) => {
 
@@ -42,10 +42,10 @@ import { Button, View, Text ,Image, TextInput,FlatList,ActivityIndicator } from 
   const { error, isLoaded, items } = this.state
     return(
       <View style={{flex: 1, paddingTop:20}}>
-      <Text >Users</Text>
+      <Text>Books</Text>
         <FlatList
           data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.name}</Text>}
+          renderItem={({item}) => <Text>{item.title}</Text>}
           keyExtractor={({id}, index) => id}
         />
       </View>

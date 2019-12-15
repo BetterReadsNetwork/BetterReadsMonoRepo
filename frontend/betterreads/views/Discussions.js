@@ -3,7 +3,7 @@ import { Button, View, Text ,Image, TextInput,FlatList,ActivityIndicator,CheckBo
 export default class Discussions extends React.Component {
    constructor(props){
     super(props);
-     this.state ={ isLoading: true,base : "https://slippery-fly-59.localtunnel.me"}
+     this.state ={ isLoading: true,base : "http://nicereads.herokuapp.com"}
   }
 
   componentDidMount(){
