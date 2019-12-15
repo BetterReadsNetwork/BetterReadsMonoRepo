@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Commits PWA</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
-  <script src="./js/notification.js"></script>
+  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
     <div class="app app__layout">
@@ -55,6 +55,9 @@
     <script src="./js/menu.js"></script>
 </body>
 
+<!-- moving the notifications script down here because maybe the DOM hasn't loaded yet -->
+<script src="./js/notification.js"></script>
+
 <!-- FROM FIREBASE CLOUDMESSAGING SET UP --------------------->
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="/__/firebase/7.5.2/firebase-app.js"></script>
@@ -65,5 +68,6 @@
 
 <!-- Initialize Firebase -->
 <script src="/__/firebase/init.js"></script>
+
 
 </html>

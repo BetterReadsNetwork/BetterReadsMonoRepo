@@ -42,7 +42,9 @@
   // Ask User if he/she wants to subscribe to push notifications and then
   // ..subscribe and send push notification
   function subscribePush() {
+      console.log("starting subscribe push")
     navigator.serviceWorker.ready.then(function(registration) {
+        console.log("service worker ready for notifications")
       if (!registration.pushManager) {
         alert('Your browser doesn\'t support push notification.');
         return false;
@@ -68,6 +70,7 @@
 
   // Unsubscribe the user from push notifications
   function unsubscribePush() {
+      console.log("starting unsubscribe push")
     navigator.serviceWorker.ready
     .then(function(registration) {
       //Get `push subscription`
@@ -98,8 +101,10 @@
     })
   }
 
+
   //To change status
   function changePushStatus(status) {
+    console.log("changing the status of the button")
     fabPushElement.dataset.checked = status;
     fabPushElement.checked = status;
     if (status) {
@@ -112,43 +117,38 @@
     }
   }
 
-
-
-  //////////////////// adding and deleting subscribers from our database
   function saveSubscriptionID(subscription) {
-    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
+      var subscription_id = subscription.endpoint.split('gcm/send/')[1];
 
-    console.log("Subscription ID", subscription_id);
+      console.log("Subscription ID", subscription_id);
 
-    fetch('http://localhost:3333/api/users', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ user_id : subscription_id })
-    });
-}
+      fetch('http://localhost:3333/api/users', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id : subscription_id })
+      });
+  }
 
-function deleteSubscriptionID(subscription) {
-    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
+  function deleteSubscriptionID(subscription) {
+      var subscription_id = subscription.endpoint.split('gcm/send/')[1];
 
-    fetch('http://localhost:3333/api/user/' + subscription_id, {
-      method: 'delete',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-}
-
-
+      fetch('http://localhost:3333/api/user/' + subscription_id, {
+        method: 'delete',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+  }
 
 
-
-
+ 
   //Click event for subscribe push
   fabPushElement.addEventListener('click', function () {
+      console.log("subscribe button clicked")
     var isSubscribed = (fabPushElement.dataset.checked === 'true');
     if (isSubscribed) {
       unsubscribePush();
